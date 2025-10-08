@@ -1,112 +1,131 @@
-```html
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Quiz Result</title>
-  <style>
-    body {
-      font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
-      background: #f4f7fb;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      height: 100vh;
-      margin: 0;
-    }
-    .card {
-      background: #fff;
-      border-radius: 16px;
-      padding: 40px;
-      box-shadow: 0 6px 20px rgba(0,0,0,0.1);
-      max-width: 400px;
-      text-align: center;
-      transition: all 0.3s ease;
-    }
-    .title {
-      font-size: 1.6em;
-      font-weight: bold;
-      margin-bottom: 15px;
-    }
-    .desc {
-      font-size: 1em;
-      color: #555;
-      line-height: 1.5;
-    }
-    .loading {
-      font-size: 1.2em;
-      color: #888;
-    }
-  </style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sorting Hat Quiz Result</title>
+    <link rel="stylesheet" href="style.css">
 </head>
 <body>
-  <div id="resultCard" class="card">
-    <div class="loading">Loading your result...</div>
-  </div>
+    <div class="container">
+        <h1>Find Your House</h1>
+        <form id="emailForm">
+            <div class="input-group">
+                <label for="emailInput">Enter your email:</label>
+                <input type="email" id="emailInput" required placeholder="example@email.com">
+            </div>
+            <button type="submit" id="submitButton">Check Result</button>
+        </form>
+        <div id="loading" class="loading">Finding your house...</div>
+        <div id="result" class="result">
+            <div class="title"></div>
+            <div class="desc"></div>
+            <p class="badge-text"></p>
+        </div>
+    </div>
 
-  <script>
-    const appToken = "V1VKbIAasakzuAsD4x0lObgKgQc";
-    const tableId = "tblMhTzRqOPlesg3";
-
-    const params = new URLSearchParams(window.location.search);
-    const recordId = params.get("id");
-    const email = params.get("email");
-
-    const card = document.getElementById("resultCard");
-
-    async function fetchRecordById(id) {
-      const response = await fetch(`https://open.larksuite.com/open-apis/bitable/v1/apps/${appToken}/tables/${tableId}/records/${id}`, {
-        headers: { Authorization: `Bearer ${appToken}` }
-      });
-      const data = await response.json();
-      if (data.data && data.data.record) return data.data.record;
-      throw new Error("Record not found");
-    }
-
-    async function fetchRecordByEmail(email) {
-      const response = await fetch(`https://open.larksuite.com/open-apis/bitable/v1/apps/${appToken}/tables/${tableId}/records?filter=CurrentValue.[Email]="${email}"`, {
-        headers: { Authorization: `Bearer ${appToken}` }
-      });
-      const data = await response.json();
-      if (data.data && data.data.items && data.data.items.length > 0)
-        return data.data.items[0];
-      throw new Error("No record found for that email");
-    }
-
-    function renderResult(resultText) {
-      const houseThemes = {
+    <script>
+    const resultDiv = document.getElementById("result");
+    const houseThemes = {
         "GriffinHour": { color: "#E74C3C", desc: "Timekeeping is your biggest challenge. Missed logs and strict deadlines often cause stress. In this house, NaveeTime is your best friend as it automates attendance and keeps records accurate. Smoother HR days are ahead!" },
         "RavenClause": { color: "#3498DB", desc: "Policies and compliance often weigh you down. Drafting, updating, and making sure rules are followed can be a challenge. In this house, People Navee X is your trusted ally, making policies clear, accessible, and acknowledged. Clear rules lead to stronger teams!" },
         "SlytheRoll": { color: "#27AE60", desc: "Payroll accuracy and deadlines create the most pressure. Errors and disputes can pile up quickly. In this house, NaveePay is your greatest support, automating payroll and ensuring payouts are always on time and error free. Accuracy builds trust and confidence!" },
         "HuffleStaff": { color: "#F1C40F", desc: "People concerns and engagement take much of your time. Miscommunication makes things harder than they need to be. In this house, People Navee eXodus and eXpedition are your companion, empowering employees and improving support. Strong teams start with care!" }
-      };
+    };
 
-      const house = Object.keys(houseThemes).find(h => resultText.includes(h)) || "Unknown";
-      const theme = houseThemes[house];
+    const emailForm = document.getElementById('emailForm');
+    const emailInput = document.getElementById('emailInput');
+    const submitButton = document.getElementById('submitButton');
+    const loadingDiv = document.getElementById('loading');
 
-      card.innerHTML = `
-        <div class="title" style="color: ${theme?.color || "#555"};">${resultText}</div>
-        <div class="desc">${theme?.desc || "No description available."}</div>
-        <p style="margin-top:20px; font-size:0.9em;">Follow People Navee’s FB page to claim your ${house} badge!</p>
-      `;
-      card.style.borderTop = `6px solid ${theme?.color || "#ccc"}`;
+    async function checkEmail(email) {
+        try {
+            // First try to check if the server is running
+            try {
+                const testResponse = await fetch('http://localhost:8080/test');
+                const testData = await testResponse.json();
+                console.log('Server test response:', testData);
+            } catch (error) {
+                console.error('Server connection test failed:', error);
+                throw new Error('Could not connect to server. Please make sure the server is running (npm start)');
+            }
+
+            // If server test passed, proceed with the email check
+            const response = await fetch(`http://localhost:8080/api/check-email?email=${encodeURIComponent(email)}`);
+            const data = await response.json();
+            console.log('Server response:', JSON.stringify(data, null, 2));
+            
+            if (!response.ok) {
+                throw new Error(data.error || 'Failed to check email');
+            }
+            
+            if (!data.result) {
+                throw new Error('No result received from server');
+            }
+            
+            // Ensure we have a string result
+            const result = typeof data.result === 'string' ? data.result : 
+                          (data.result.text || JSON.stringify(data.result));
+            
+            console.log('Processed result:', result);
+            return result;
+        } catch (error) {
+            console.error('API Error:', error);
+            throw error;
+        }
     }
 
-    (async function load() {
-      try {
-        let record;
-        if (recordId) record = await fetchRecordById(recordId);
-        else if (email) record = await fetchRecordByEmail(email);
-        else throw new Error("Missing ID or Email parameter");
+    function showResult(resultText, type = 'success') {
+        console.log('Showing result:', resultText);
+        
+        if (type === 'error') {
+            resultDiv.innerHTML = `<div class="title">${resultText}</div>`;
+            resultDiv.className = 'result error';
+            return;
+        }
 
-        const resultText = record.fields?.Result || "No Result Found";
-        renderResult(resultText);
-      } catch (err) {
-        card.innerHTML = `<div class="desc">Error: ${err.message}</div>`;
-      }
-    })();
-  </script>
+        // Make sure resultText is a string
+        resultText = String(resultText);
+        
+        const house = Object.keys(houseThemes).find(h => resultText.includes(h)) || "Unknown";
+        const theme = houseThemes[house];
+        
+        console.log('Found house:', house);
+        console.log('Theme:', theme);
+
+        resultDiv.innerHTML = `
+            <div class="title" style="color: ${theme?.color || '#555'}">${resultText}</div>
+            <div class="desc">${theme?.desc || 'No description available.'}</div>
+            <p class="badge-text">Follow People Navee's FB page to claim your ${house} badge!</p>
+        `;
+        resultDiv.className = 'result success';
+        resultDiv.style.borderTop = `6px solid ${theme?.color || '#ccc'}`;
+    }
+
+    function showLoading(show) {
+        loadingDiv.style.display = show ? 'block' : 'none';
+        submitButton.disabled = show;
+    }
+
+    emailForm.addEventListener('submit', async (e) => {
+        e.preventDefault();
+        const email = emailInput.value.trim();
+        
+        if (!email) {
+            showResult('Please enter your email address', 'error');
+            return;
+        }
+
+        try {
+            showLoading(true);
+            const result = await checkEmail(email);
+            showResult(result);
+        } catch (error) {
+            showResult(error.message, 'error');
+        } finally {
+            showLoading(false);
+        }
+    });
+    </script>
 </body>
 </html>
-```
