@@ -5,48 +5,48 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Hogwarts House Sorting</title>
     <link rel="stylesheet" href="style.css">
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=MedievalSharp&display=swap" rel="stylesheet">
 </head>
 <body>
-    <div class="magical-background"></div>
     <div class="container">
-        <div class="parchment">
-            <h1>
-                <img src="https://1000logos.net/wp-content/uploads/2017/02/Harry-Potter-Logo-500x281.png" alt="Harry Potter" class="hp-logo">
-                <span>Discover Your House</span>
-            </h1>
+        <h1>Discover Your House</h1>
             <form id="emailForm">
                 <div class="input-group">
-                    <label for="emailInput">Enter your magical email:</label>
-                    <input type="email" id="emailInput" required placeholder="wizard@hogwarts.edu">
+                    <label for="emailInput">Enter your email:</label>
+                    <input type="email" id="emailInput" required placeholder="Enter your email">
                 </div>
-                <button type="submit" id="submitButton" class="magical-btn">
-                    <span class="btn-text">Reveal Your House</span>
-                    <div class="wand-spark"></div>
+                <button type="submit" id="submitButton">
+                    Reveal Your House
                 </button>
             </form>
             <div id="loading" class="loading">
-                <div class="sorting-hat">🎩</div>
-                <p>The Sorting Hat is thinking...</p>
+                The Sorting Hat is deciding...
             </div>
             <div id="result" class="result">
-                <div class="house-crest"></div>
                 <div class="title"></div>
                 <div class="desc"></div>
                 <p class="badge-text"></p>
             </div>
-        </div>
     </div>
 
     <script>
     const resultDiv = document.getElementById("result");
     const houseThemes = {
-        "GriffinHour": { color: "#E74C3C", desc: "Timekeeping is your biggest challenge. Missed logs and strict deadlines often cause stress. In this house, NaveeTime is your best friend as it automates attendance and keeps records accurate. Smoother HR days are ahead!" },
-        "RavenClause": { color: "#3498DB", desc: "Policies and compliance often weigh you down. Drafting, updating, and making sure rules are followed can be a challenge. In this house, People Navee X is your trusted ally, making policies clear, accessible, and acknowledged. Clear rules lead to stronger teams!" },
-        "SlytheRoll": { color: "#27AE60", desc: "Payroll accuracy and deadlines create the most pressure. Errors and disputes can pile up quickly. In this house, NaveePay is your greatest support, automating payroll and ensuring payouts are always on time and error free. Accuracy builds trust and confidence!" },
-        "HuffleStaff": { color: "#F1C40F", desc: "People concerns and engagement take much of your time. Miscommunication makes things harder than they need to be. In this house, People Navee eXodus and eXpedition are your companion, empowering employees and improving support. Strong teams start with care!" }
+        "GriffinHour": { 
+            class: "gryffindor",
+            desc: "Brave and determined, you face challenges head-on. Your dedication to precision and accountability sets you apart. Welcome to the house where courage meets responsibility!" 
+        },
+        "RavenClause": { 
+            class: "ravenclaw",
+            desc: "With wit and wisdom, you solve complex puzzles. Your analytical mind and attention to detail make you a natural problem solver. Knowledge is your greatest power!" 
+        },
+        "SlytheRoll": { 
+            class: "slytherin",
+            desc: "Ambitious and resourceful, you strive for excellence. Your strategic thinking and efficiency drive success. Great achievements await in your future!" 
+        },
+        "HuffleStaff": { 
+            class: "hufflepuff",
+            desc: "Patient and dedicated, you value harmony and fairness. Your commitment to supporting others creates a positive environment. Together, we achieve more!" 
+        }
     };
 
     const emailForm = document.getElementById('emailForm');
@@ -96,7 +96,7 @@
         
         if (type === 'error') {
             resultDiv.innerHTML = `<div class="title">${resultText}</div>`;
-            resultDiv.className = 'result error';
+            resultDiv.className = 'result';
             return;
         }
 
@@ -110,12 +110,11 @@
         console.log('Theme:', theme);
 
         resultDiv.innerHTML = `
-            <div class="title" style="color: ${theme?.color || '#555'}">${resultText}</div>
+            <div class="title">${house}</div>
             <div class="desc">${theme?.desc || 'No description available.'}</div>
-            <p class="badge-text">Follow People Navee's FB page to claim your ${house} badge!</p>
+            <p class="badge-text">Welcome to your new house at Hogwarts!</p>
         `;
-        resultDiv.className = 'result success';
-        resultDiv.style.borderTop = `6px solid ${theme?.color || '#ccc'}`;
+        resultDiv.className = `result ${theme?.class || ''}`;
     }
 
     function showLoading(show) {
