@@ -3,24 +3,40 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Sorting Hat Quiz Result</title>
+    <title>Hogwarts House Sorting</title>
     <link rel="stylesheet" href="style.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=MedievalSharp&display=swap" rel="stylesheet">
 </head>
 <body>
+    <div class="magical-background"></div>
     <div class="container">
-        <h1>Find Your House</h1>
-        <form id="emailForm">
-            <div class="input-group">
-                <label for="emailInput">Enter your email:</label>
-                <input type="email" id="emailInput" required placeholder="example@email.com">
+        <div class="parchment">
+            <h1>
+                <img src="https://1000logos.net/wp-content/uploads/2017/02/Harry-Potter-Logo-500x281.png" alt="Harry Potter" class="hp-logo">
+                <span>Discover Your House</span>
+            </h1>
+            <form id="emailForm">
+                <div class="input-group">
+                    <label for="emailInput">Enter your magical email:</label>
+                    <input type="email" id="emailInput" required placeholder="wizard@hogwarts.edu">
+                </div>
+                <button type="submit" id="submitButton" class="magical-btn">
+                    <span class="btn-text">Reveal Your House</span>
+                    <div class="wand-spark"></div>
+                </button>
+            </form>
+            <div id="loading" class="loading">
+                <div class="sorting-hat">🎩</div>
+                <p>The Sorting Hat is thinking...</p>
             </div>
-            <button type="submit" id="submitButton">Check Result</button>
-        </form>
-        <div id="loading" class="loading">Finding your house...</div>
-        <div id="result" class="result">
-            <div class="title"></div>
-            <div class="desc"></div>
-            <p class="badge-text"></p>
+            <div id="result" class="result">
+                <div class="house-crest"></div>
+                <div class="title"></div>
+                <div class="desc"></div>
+                <p class="badge-text"></p>
+            </div>
         </div>
     </div>
 
