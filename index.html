@@ -26,9 +26,7 @@
 
     <div id="result" class="result-modal" onclick="closeModal(event)">
         <div class="modal-content">
-            <div class="title"></div>
-            <div class="desc"></div>
-            <p class="badge-text"></p>
+            <div class="house-image"></div>
         </div>
     </div>
 
@@ -37,19 +35,19 @@
     const houseThemes = {
         "GriffinHour": { 
             class: "gryffindor",
-            desc: "Brave and determined, you face challenges head-on. Your dedication to precision and accountability sets you apart. Welcome to the house where courage meets responsibility!" 
+            imagePath: "./assets/GriffinHour.png"
         },
         "RavenClause": { 
             class: "ravenclaw",
-            desc: "With wit and wisdom, you solve complex puzzles. Your analytical mind and attention to detail make you a natural problem solver. Knowledge is your greatest power!" 
+            imagePath: "./assets/RavenClause.png"
         },
         "SlytheRoll": { 
             class: "slytherin",
-            desc: "Ambitious and resourceful, you strive for excellence. Your strategic thinking and efficiency drive success. Great achievements await in your future!" 
+            imagePath: "./assets/SlytheRoll.png"
         },
         "HuffleStaff": { 
             class: "hufflepuff",
-            desc: "Patient and dedicated, you value harmony and fairness. Your commitment to supporting others creates a positive environment. Together, we achieve more!" 
+            imagePath: "./assets/HuffleStaff.png"
         }
     };
 
@@ -123,11 +121,11 @@
         console.log('Theme:', theme);
 
         modalContent.innerHTML = `
-            <div class="title">${house}</div>
-            <div class="desc">${theme?.desc || 'No description available.'}</div>
-            <p class="badge-text">Welcome to your new house at Hogwarts!</p>
+            <div class="house-image">
+                <img src="${theme?.imagePath || ''}" alt="${house}" />
+            </div>
         `;
-        modalContent.className = `modal-content ${theme?.class || ''}`;
+        modalContent.className = 'modal-content';
         resultDiv.style.display = 'flex';
     }
 

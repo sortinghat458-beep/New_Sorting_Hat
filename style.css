@@ -1,13 +1,10 @@
 :root {
-    --gryffindor-1: #740001;
-    --gryffindor-2: #D3A625;
-    --slytherin-1: #1A472A;
-    --slytherin-2: #2A623D;
-    --ravenclaw-1: #0E1A40;
-    --ravenclaw-2: #222F5B;
-    --hufflepuff-1: #ECB939;
-    --hufflepuff-2: #F0C75E;
-    --parchment: #F5E6CB;
+    --primary: #2196F3;
+    --surface: #FFFFFF;
+    --background: #F5F7FA;
+    --text: #333333;
+    --text-secondary: #666666;
+    --accent-light: rgba(33, 150, 243, 0.1);
 }
 
     * {
@@ -60,30 +57,27 @@
 }
 
 body {
-    font-family: 'Times New Roman', serif;
-    background: linear-gradient(-45deg, var(--gryffindor-1), var(--slytherin-1), var(--ravenclaw-1), var(--hufflepuff-1));
-    background-size: 400% 400%;
-    animation: gradientBG 15s ease infinite;
+    font-family: 'Poppins', sans-serif;
+    background-color: var(--background);
+    background-image: linear-gradient(135deg, rgba(33, 150, 243, 0.1), rgba(33, 150, 243, 0.05));
     display: flex;
     justify-content: center;
     align-items: center;
     min-height: 100vh;
     padding: 20px;
-    color: #2A2A2A;
+    color: var(--text);
 }
 
 .container {
-    background-color: var(--parchment);
+    background-color: var(--surface);
     padding: 2.5rem;
-    border-radius: 15px;
-    box-shadow: 0 0 30px rgba(0, 0, 0, 0.3);
+    border-radius: 20px;
+    box-shadow: 0 10px 25px rgba(33, 150, 243, 0.1);
     width: 100%;
     max-width: 500px;
     position: relative;
     overflow: hidden;
-    transform-style: preserve-3d;
-    transform: perspective(1000px) rotateX(0deg);
-    transition: all 0.5s ease;
+    transition: all 0.3s ease;
 }
 
 .container:hover {
@@ -131,20 +125,20 @@ h1 {
 }
 
 button {
-    background: linear-gradient(45deg, var(--gryffindor-1), var(--gryffindor-2));
+    background-color: var(--primary);
     color: white;
     padding: 1rem 2rem;
     border: none;
-    border-radius: 8px;
-    font-size: 1.2rem;
-    font-weight: bold;
+    border-radius: 12px;
+    font-size: 1rem;
+    font-weight: 600;
+    font-family: 'Poppins', sans-serif;
     cursor: pointer;
     width: 100%;
     transition: all 0.3s ease;
     text-transform: uppercase;
     letter-spacing: 1px;
-    position: relative;
-    overflow: hidden;
+    box-shadow: 0 4px 15px rgba(33, 150, 243, 0.2);
 }
 
 button::before {
@@ -242,44 +236,36 @@ button:hover::before {
     }
 }
 
-.result-modal .modal-content.gryffindor {
-    background: linear-gradient(135deg, var(--gryffindor-1), var(--gryffindor-2));
-    color: white;
+.modal-content {
+    background-color: transparent;
+    padding: 0;
+    max-width: none;
+    width: auto;
 }
 
-.result-modal .modal-content.slytherin {
-    background: linear-gradient(135deg, var(--slytherin-1), var(--slytherin-2));
-    color: white;
+.modal-content .house-image {
+    display: flex;
+    justify-content: center;
+    align-items: center;
 }
 
-.result-modal .modal-content.ravenclaw {
-    background: linear-gradient(135deg, var(--ravenclaw-1), var(--ravenclaw-2));
-    color: white;
-}
-
-.result-modal .modal-content.hufflepuff {
-    background: linear-gradient(135deg, var(--hufflepuff-1), var(--hufflepuff-2));
-    color: #2A2A2A;
+.modal-content .house-image img {
+    max-height: 90vh;
+    width: auto;
+    height: auto;
+    object-fit: contain;
+    display: block;
 }
 
 .modal-content .title {
-    font-size: 3rem;
-    margin-bottom: 1.5rem;
-    text-transform: uppercase;
-    letter-spacing: 3px;
-    font-weight: bold;
-}
-
-.modal-content .desc {
     font-size: 1.8rem;
-    line-height: 1.6;
-    margin-bottom: 2.25rem;
-}
-
-.modal-content .badge-text {
-    font-style: italic;
-    font-size: 1.65rem;
-    opacity: 0.9;
+    margin: 0;
+    padding: 1.5rem;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    font-weight: bold;
+    color: var(--text);
+    background-color: var(--surface);
 }
 
 .loading {
