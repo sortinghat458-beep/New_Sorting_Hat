@@ -1,0 +1,116 @@
+﻿@{
+    ViewData["Title"] = "Discover My House";
+}
+
+<div class="container">
+    <h1>@ViewData["Title"]</h1>
+    <form id="emailForm">
+        <div class="input-group">
+            <label for="emailInput">Enter your email:</label>
+            <input type="email" id="emailInput" required placeholder="Enter your email">
+        </div>
+        <button type="submit" id="submitButton">
+            Reveal My House
+        </button>
+    </form>
+    <div id="loading" class="loading" style="display: none;">
+        The Sorting Hat is deciding...
+    </div>
+</div>
+
+<div id="result" class="result-modal">
+    <div class="modal-content">
+        <div class="house-image"></div>
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+        const resultDiv = document.getElementById("result");
+        const houseThemes = {
+            "GriffinHour": {
+                class: "gryffindor",
+                imagePath: "/assets/GriffinHour.png"
+            },
+            "RavenClause": {
+                class: "ravenclaw",
+                imagePath: "/assets/RavenClause.png"
+            },
+            "SlytheRoll": {
+                class: "slytherin",
+                imagePath: "/assets/SlytheRoll.png"
+            },
+            "HuffleStaff": {
+                class: "hufflepuff",
+                imagePath: "/assets/HuffleStaff.png"
+            }
+        };
+
+        const emailForm = document.getElementById('emailForm');
+        const emailInput = document.getElementById('emailInput');
+        const submitButton = document.getElementById('submitButton');
+        const loadingDiv = document.getElementById('loading');
+
+        function closeModal(event) {
+            if (event.target.className === 'result-modal') {
+                resultDiv.style.display = 'none';
+            }
+        }
+
+        resultDiv.addEventListener('click', closeModal);
+
+        function showResult(resultText, type = 'success') {
+            const modalContent = resultDiv.querySelector('.modal-content');
+
+            if (type === 'error') {
+                modalContent.innerHTML = `<div class="title">${resultText}</div>`;
+                modalContent.className = 'modal-content';
+                resultDiv.style.display = 'flex';
+                return;
+            }
+
+            resultText = String(resultText);
+            const house = Object.keys(houseThemes).find(h => resultText.includes(h)) || "Unknown";
+            const theme = houseThemes[house];
+
+            modalContent.innerHTML = `
+                <div class="house-image">
+                    <img src="${theme?.imagePath || ''}" alt="${house}" />
+                </div>
+            `;
+            modalContent.className = 'modal-content';
+            resultDiv.style.display = 'flex';
+        }
+
+        function showLoading(show) {
+            loadingDiv.style.display = show ? 'block' : 'none';
+            submitButton.disabled = show;
+        }
+
+        emailForm.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const email = emailInput.value.trim();
+
+            if (!email) {
+                showResult('Please enter your email address', 'error');
+                return;
+            }
+
+            try {
+                showLoading(true);
+                const response = await fetch(`/api/check-email?email=${encodeURIComponent(email)}`);
+                const data = await response.json();
+
+                if (!response.ok || !data.success) {
+                    throw new Error(data.error || 'Failed to check email');
+                }
+
+                showResult(data.result);
+            } catch (error) {
+                showResult(error.message, 'error');
+            } finally {
+                showLoading(false);
+            }
+        });
+    </script>
+}
