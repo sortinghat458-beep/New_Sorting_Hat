@@ -2,7 +2,8 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <meta name="theme-color" content="#000000">
     <title>Hogwarts House Sorting</title>
     <link rel="stylesheet" href="style.css">
 </head>
@@ -21,11 +22,14 @@
             <div id="loading" class="loading">
                 The Sorting Hat is deciding...
             </div>
-            <div id="result" class="result">
-                <div class="title"></div>
-                <div class="desc"></div>
-                <p class="badge-text"></p>
-            </div>
+    </div>
+
+    <div id="result" class="result-modal" onclick="closeModal(event)">
+        <div class="modal-content">
+            <div class="title"></div>
+            <div class="desc"></div>
+            <p class="badge-text"></p>
+        </div>
     </div>
 
     <script>
@@ -53,6 +57,13 @@
     const emailInput = document.getElementById('emailInput');
     const submitButton = document.getElementById('submitButton');
     const loadingDiv = document.getElementById('loading');
+
+    function closeModal(event) {
+        // Only close if clicking the overlay (result-modal) and not its children
+        if (event.target.className === 'result-modal') {
+            resultDiv.style.display = 'none';
+        }
+    }
 
     async function checkEmail(email) {
         try {
@@ -93,10 +104,12 @@
 
     function showResult(resultText, type = 'success') {
         console.log('Showing result:', resultText);
+        const modalContent = resultDiv.querySelector('.modal-content');
         
         if (type === 'error') {
-            resultDiv.innerHTML = `<div class="title">${resultText}</div>`;
-            resultDiv.className = 'result';
+            modalContent.innerHTML = `<div class="title">${resultText}</div>`;
+            modalContent.className = 'modal-content';
+            resultDiv.style.display = 'flex';
             return;
         }
 
@@ -109,12 +122,13 @@
         console.log('Found house:', house);
         console.log('Theme:', theme);
 
-        resultDiv.innerHTML = `
+        modalContent.innerHTML = `
             <div class="title">${house}</div>
             <div class="desc">${theme?.desc || 'No description available.'}</div>
             <p class="badge-text">Welcome to your new house at Hogwarts!</p>
         `;
-        resultDiv.className = `result ${theme?.class || ''}`;
+        modalContent.className = `modal-content ${theme?.class || ''}`;
+        resultDiv.style.display = 'flex';
     }
 
     function showLoading(show) {
