@@ -7,6 +7,14 @@ const config = {
     viewId: 'vewuuxuOFc'
 };
 
+// House themes for styling
+const houseThemes = {
+    "GriffinHour": { class: "gryffindor" },
+    "RavenClause": { class: "ravenclaw" },
+    "SlytheRoll": { class: "slytherin" },
+    "HuffleStaff": { class: "hufflepuff" }
+};
+
 // DOM Elements
 const emailForm = document.getElementById('emailForm');
 const emailInput = document.getElementById('emailInput');
@@ -87,7 +95,50 @@ function showLoading(show) {
 }
 
 // Helper function to show result message
-function showResult(message, type) {
-    resultDiv.textContent = message;
-    resultDiv.className = 'result ' + type;
+function showResult(result, type = 'success') {
+    console.log('Showing result:', result);
+    const modalContent = resultDiv.querySelector('.modal-content');
+    
+    if (type === 'error') {
+        modalContent.innerHTML = `<div class="title">${result}</div>`;
+        modalContent.className = 'modal-content';
+        resultDiv.style.display = 'flex';
+        return;
+    }
+
+    // Handle array of text objects from Lark Base
+    let resultArray = [];
+    if (Array.isArray(result)) {
+        resultArray = result;
+    } else if (typeof result === 'object' && result.text) {
+        resultArray = [result];
+    } else if (typeof result === 'string') {
+        try {
+            resultArray = JSON.parse(result);
+        } catch {
+            resultArray = [{ text: result, type: 'text' }];
+        }
+    }
+
+    // Extract house name and determine theme class
+    const houseName = resultArray[0]?.text || '';
+    const house = Object.keys(houseThemes).find(h => houseName.includes(h)) || "Unknown";
+    const themeClass = houseThemes[house]?.class || '';
+
+    // Format the message parts exactly as they come from Lark Base
+    const mainMessage = resultArray[1]?.text || '';
+    const motto = resultArray[2]?.text || '';
+    const spacer = resultArray[3]?.text || '';
+    const callToAction = resultArray[4]?.text || '';
+
+    modalContent.innerHTML = `
+        <div class="title">${houseName}</div>
+        <div class="desc">${mainMessage}</div>
+        <p class="motto">${motto}</p>
+        ${spacer && `<br>`}
+        <p class="cta">${callToAction}</p>
+    `;
+    
+    modalContent.className = `modal-content ${themeClass}`;
+    resultDiv.style.display = 'flex';
 }

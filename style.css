@@ -1,13 +1,15 @@
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap');
+
 :root {
-    --gryffindor-1: #740001;
-    --gryffindor-2: #D3A625;
-    --slytherin-1: #1A472A;
-    --slytherin-2: #2A623D;
-    --ravenclaw-1: #0E1A40;
-    --ravenclaw-2: #222F5B;
-    --hufflepuff-1: #ECB939;
-    --hufflepuff-2: #F0C75E;
-    --parchment: #F5E6CB;
+    --gryffindor: #FF4D4D;
+    --slytherin: #4CAF50;
+    --ravenclaw: #2196F3;
+    --hufflepuff: #FFC107;
+    --primary: #2196F3;
+    --surface: #FFFFFF;
+    --background: #F5F7FA;
+    --text: #333333;
+    --text-secondary: #666666;
 }
 
     * {
@@ -60,30 +62,27 @@
 }
 
 body {
-    font-family: 'Times New Roman', serif;
-    background: linear-gradient(-45deg, var(--gryffindor-1), var(--slytherin-1), var(--ravenclaw-1), var(--hufflepuff-1));
-    background-size: 400% 400%;
-    animation: gradientBG 15s ease infinite;
+    font-family: 'Poppins', sans-serif;
+    background-color: var(--background);
+    background-image: linear-gradient(135deg, rgba(33, 150, 243, 0.1), rgba(33, 150, 243, 0.05));
     display: flex;
     justify-content: center;
     align-items: center;
     min-height: 100vh;
     padding: 20px;
-    color: #2A2A2A;
+    color: var(--text);
 }
 
 .container {
-    background-color: var(--parchment);
+    background-color: var(--surface);
     padding: 2.5rem;
-    border-radius: 15px;
-    box-shadow: 0 0 30px rgba(0, 0, 0, 0.3);
+    border-radius: 20px;
+    box-shadow: 0 10px 25px rgba(33, 150, 243, 0.1);
     width: 100%;
     max-width: 500px;
     position: relative;
     overflow: hidden;
-    transform-style: preserve-3d;
-    transform: perspective(1000px) rotateX(0deg);
-    transition: all 0.5s ease;
+    transition: all 0.3s ease;
 }
 
 .container:hover {
@@ -91,14 +90,14 @@ body {
 }
 
 h1 {
-    color: var(--gryffindor-1);
+    color: var(--text-light);
     margin-bottom: 2rem;
     text-align: center;
     font-size: 2.5rem;
     font-weight: bold;
     text-transform: uppercase;
     letter-spacing: 2px;
-    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.2);
+    text-shadow: 0 0 10px rgba(255, 255, 255, 0.3);
 }
 
 .input-group {
@@ -109,18 +108,20 @@ h1 {
 .input-group label {
     display: block;
     margin-bottom: 0.8rem;
-    color: #2A2A2A;
-    font-size: 1.2rem;
-    font-weight: bold;
+    color: var(--text);
+    font-size: 1rem;
+    font-weight: 500;
 }
 
 .input-group input {
     width: 100%;
     padding: 1rem;
-    border: 2px solid #8B4513;
-    border-radius: 8px;
-    font-size: 1.1rem;
-    background-color: rgba(255, 255, 255, 0.9);
+    border: 2px solid rgba(33, 150, 243, 0.2);
+    border-radius: 12px;
+    font-size: 1rem;
+    font-family: 'Poppins', sans-serif;
+    background-color: var(--surface);
+    color: var(--text);
     transition: all 0.3s ease;
 }
 
@@ -131,13 +132,14 @@ h1 {
 }
 
 button {
-    background: linear-gradient(45deg, var(--gryffindor-1), var(--gryffindor-2));
+    background-color: var(--primary);
     color: white;
     padding: 1rem 2rem;
     border: none;
-    border-radius: 8px;
-    font-size: 1.2rem;
-    font-weight: bold;
+    border-radius: 12px;
+    font-size: 1rem;
+    font-weight: 600;
+    font-family: 'Poppins', sans-serif;
     cursor: pointer;
     width: 100%;
     transition: all 0.3s ease;
@@ -145,6 +147,7 @@ button {
     letter-spacing: 1px;
     position: relative;
     overflow: hidden;
+    box-shadow: 0 4px 15px rgba(33, 150, 243, 0.2);
 }
 
 button::before {
@@ -187,16 +190,17 @@ button:hover::before {
 }
 
 .modal-content {
-    background-color: var(--parchment);
-    padding: 3.75rem;
-    border-radius: 22px;
-    max-width: 750px;
+    background-color: var(--surface);
+    padding: 2rem;
+    border-radius: 20px;
+    max-width: 480px;
     width: 90%;
     text-align: center;
     position: relative;
     animation: slideIn 0.5s ease;
     overflow-y: auto;
     max-height: 90vh;
+    box-shadow: 0 15px 30px rgba(0, 0, 0, 0.1);
 }
 
 @media (max-width: 768px) {
@@ -242,44 +246,89 @@ button:hover::before {
     }
 }
 
-.result-modal .modal-content.gryffindor {
-    background: linear-gradient(135deg, var(--gryffindor-1), var(--gryffindor-2));
-    color: white;
-}
-
-.result-modal .modal-content.slytherin {
-    background: linear-gradient(135deg, var(--slytherin-1), var(--slytherin-2));
-    color: white;
-}
-
-.result-modal .modal-content.ravenclaw {
-    background: linear-gradient(135deg, var(--ravenclaw-1), var(--ravenclaw-2));
-    color: white;
-}
-
-.result-modal .modal-content.hufflepuff {
-    background: linear-gradient(135deg, var(--hufflepuff-1), var(--hufflepuff-2));
-    color: #2A2A2A;
+.modal-content {
+    padding: 3rem;
 }
 
 .modal-content .title {
-    font-size: 3rem;
+    font-size: 1.875rem; /* reduced from 2.5rem */
     margin-bottom: 1.5rem;
     text-transform: uppercase;
-    letter-spacing: 3px;
+    letter-spacing: 1px;
+    font-weight: 700;
+    line-height: 1.2;
+}
+
+.modal-content .desc {
+    font-size: 0.94rem; /* reduced from 1.25rem */
+    line-height: 1.6;
+    margin-bottom: 1.5rem;
+    font-weight: 400;
+    color: var(--text-secondary);
+}
+
+.modal-content .motto {
+    font-size: 1.125rem; /* reduced from 1.5rem */
+    font-weight: 600;
+    margin: 1.25rem 0;
+    color: var(--primary);
+}
+
+.modal-content .cta {
+    font-size: 0.825rem; /* reduced from 1.1rem */
+    font-weight: 500;
+    margin-top: 1.5rem;
+    padding: 0.875rem;
+    border-radius: 10px;
+    background-color: rgba(33, 150, 243, 0.1);
+    color: var(--primary);
+}
+
+.result-modal .modal-content.gryffindor {
+    border-top: 5px solid var(--gryffindor);
+}
+
+.result-modal .modal-content.slytherin {
+    border-top: 5px solid var(--slytherin);
+}
+
+.result-modal .modal-content.ravenclaw {
+    border-top: 5px solid var(--ravenclaw);
+}
+
+.result-modal .modal-content.hufflepuff {
+    border-top: 5px solid var(--hufflepuff);
+}
+
+.modal-content .title {
+    font-size: 2.4rem;
+    margin-bottom: 1.2rem;
+    text-transform: uppercase;
+    letter-spacing: 2px;
     font-weight: bold;
 }
 
 .modal-content .desc {
-    font-size: 1.8rem;
+    font-size: 1.28rem;
     line-height: 1.6;
-    margin-bottom: 2.25rem;
+    margin-bottom: 1.6rem;
 }
 
-.modal-content .badge-text {
+.modal-content .motto {
+    font-size: 1.44rem;
+    font-weight: bold;
     font-style: italic;
-    font-size: 1.65rem;
+    margin-bottom: 1.6rem;
     opacity: 0.9;
+}
+
+.modal-content .cta {
+    font-size: 1.12rem;
+    padding: 0.8rem;
+    border: 2px solid rgba(255, 255, 255, 0.2);
+    border-radius: 8px;
+    background: rgba(0, 0, 0, 0.2);
+    margin-top: 0.8rem;
 }
 
 .loading {

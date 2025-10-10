@@ -32,9 +32,33 @@
         </div>
     </div>
 
+<<<<<<< Updated upstream
     <script src="script.js"></script>
 </body>
 </html>
+=======
+    <script>
+    const resultDiv = document.getElementById("result");
+    const houseThemes = {
+        "You are a GriffinHour!": { 
+            class: "gryffindor",
+            desc: "Timekeeping is your biggest challenge. Missed logs and strict deadlines often cause stress. In this house, NaveeTime is your best friend as it automates attendance and keeps records accurate.\nSmoother HR days are ahead! \nFollow People Navee’s FB page to claim your GriffinHour badge!" 
+        },
+        "You are a RavenClause!": { 
+            class: "ravenclaw",
+            desc: "Policies and compliance often weigh you down. Drafting, updating, and making sure rules are followed can be a challenge. In this house, People Navee X is your trusted ally, making policies clear, accessible, and acknowledged.\nClear rules lead to stronger teams!\nFollow People Navee’s FB page to claim your RavenClause badge!" 
+        },
+        "You are a SlytheRoll!": { 
+            class: "slytherin",
+            desc: "Payroll accuracy and deadlines create the most pressure. Errors and disputes can pile up quickly. In this house, NaveePay is your greatest support, automating payroll and ensuring payouts are always on time and error free. \nAccuracy builds trust and confidence! \nFollow People Navee’s FB page to claim your SlytherRoll badge!"
+ 
+        },
+        "You are a HuffleStaff!": { 
+            class: "hufflepuff",
+            desc: "People concerns and engagement take much of your time. Miscommunication makes things harder than they need to be. In this house, People Navee eXodus and eXpedition are your companion, empowering employees and improving support.\nStrong teams start with care!\nFollow People Navee’s FB page to claim your HuffleStaff badge!" 
+        }
+    };
+>>>>>>> Stashed changes
 
     const emailForm = document.getElementById('emailForm');
     const emailInput = document.getElementById('emailInput');
@@ -108,7 +132,7 @@
         modalContent.innerHTML = `
             <div class="title">${house}</div>
             <div class="desc">${theme?.desc || 'No description available.'}</div>
-            <p class="badge-text">Welcome to your new house at Hogwarts!</p>
+            
         `;
         modalContent.className = `modal-content ${theme?.class || ''}`;
         resultDiv.style.display = 'flex';
