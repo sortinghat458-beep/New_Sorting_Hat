@@ -54,8 +54,8 @@ async function checkEmailAndGetResult(email) {
         throw new Error('Failed to get access token');
     }
 
-    // Get records from the table
-    const response = await fetch(`https://open.larksuite.com/open-apis/bitable/v1/apps/${config.appToken}/tables/${config.tableId}/records`, {
+   // Get records from the table with Date Created field
+    const response = await fetch(`https://open.larksuite.com/open-apis/bitable/v1/apps/${config.appToken}/tables/${config.tableId}/records?view_id=${config.viewId}&field_names=["Email","Result","Date Created"]`, {
         method: 'GET',
         headers: {
             'Authorization': `Bearer ${tokenData.tenant_access_token}`,
@@ -68,16 +68,26 @@ async function checkEmailAndGetResult(email) {
         throw new Error('Failed to fetch data from Lark Base');
     }
 
-    // Find matching email and return result
-    const matchingRecord = data.data.items.find(item => 
+    // Find all matching email records
+    const matchingRecords = data.data.items.filter(item => 
         item.fields.Email && item.fields.Email.toLowerCase() === email.toLowerCase()
     );
 
-    if (!matchingRecord) {
+    if (!matchingRecords.length) {
         throw new Error('Email not found in the database');
     }
 
-    return matchingRecord.fields.Result || 'No result available';
+    // Sort by Date Created (newest first)
+    // matchingRecords.sort((a, b) => {
+    //     const dateA = new Date(a.fields['Date Created']);
+    //     const dateB = new Date(b.fields['Date Created']);
+    //     return dateB - dateA;
+    // });
+    matchingRecords=matchingRecords.sort((a, b) => new Date(a.fields['Date Created']) - new Date(a.fields['Date Created']));
+    console.log(matchingRecords);
+    // Return the result of the newest record
+    return matchingRecords[0].fields.Result || 'No result available';
+
 }
 
 // Helper function to show/hide loading state

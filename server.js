@@ -64,8 +64,19 @@ app.get('/api/check-email', async (req, res) => {
     try {
         const token = await getTenantAccessToken();
         
+        // Build the URL with proper parameters for records
+        const baseUrl = `https://open.larksuite.com/open-apis/bitable/v1/apps/${config.appToken}/tables/${config.tableId}/records`;
+        
+        // Get all records for this email and include Date Created field
+        const params = new URLSearchParams({
+            filter: `CurrentValue.[Email]="${email}"`,
+            field_names: JSON.stringify(["Email", "Result", "Date Created"])
+        });
+        
+        console.log('Making request to Larkbase with params:', params.toString());
+        
         const response = await fetch(
-            `https://open.larksuite.com/open-apis/bitable/v1/apps/${config.appToken}/tables/${config.tableId}/records?filter=CurrentValue.[Email]="${email}"`,
+            `${baseUrl}?${params}`,
             {
                 headers: {
                     'Authorization': `Bearer ${token}`,
@@ -77,12 +88,44 @@ app.get('/api/check-email', async (req, res) => {
         const data = await response.json();
         console.log('Lark Base Raw Response:', JSON.stringify(data, null, 2));
 
+        // Check for API-level errors
+        if (data.code !== 0) {
+            console.error('Larkbase API Error:', data);
+            return res.status(400).json({ 
+                error: data.msg || 'Larkbase API error',
+                details: data
+            });
+        }
+
         if (!data.data || !data.data.items || data.data.items.length === 0) {
             return res.status(404).json({ error: 'Email not found in our records' });
         }
 
-        const record = data.data.items[0];
-        console.log('Found record:', JSON.stringify(record, null, 2));
+        // Get all records and sort them by Date Created
+        const records = data.data.items;
+        
+        // Sort records by Date Created field
+        records.sort((a, b) => {
+            // Parse the dates from the Date Created field
+            const dateA = new Date(a.fields["Date Created"]);
+            const dateB = new Date(b.fields["Date Created"]);
+            // Sort in descending order (most recent first)
+            return dateB - dateA;
+        });
+
+        console.log('All records for email sorted by date:', 
+            records.map(r => ({
+                date: r.fields["Date Created"],
+                result: r.fields.Result
+            }))
+        );
+
+        // Get the most recent record (first after sorting)
+        const record = records[0];
+        console.log('Most recent record:', {
+            date: record.fields["Date Created"],
+            result: record.fields.Result
+        });
 
         if (!record.fields || !record.fields.Result) {
             return res.status(404).json({ error: 'No result found for this email' });

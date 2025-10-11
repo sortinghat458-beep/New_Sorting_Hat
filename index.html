@@ -9,6 +9,9 @@
 </head>
 <body>
     <div class="container">
+        <div class="logo">
+            <img src="./assets/DirecTED Logo v2.png" alt="DirecTED Logo">
+        </div>
         <h1>Discover My House</h1>
             <form id="emailForm">
                 <div class="input-group">
@@ -67,17 +70,18 @@
         try {
             // First try to check if the server is running
             try {
-                const testResponse = await fetch('http://localhost:8080/test');
-                const testData = await testResponse.json();
-                console.log('Server test response:', testData);
-            } catch (error) {
-                console.error('Server connection test failed:', error);
-                throw new Error('Could not connect to server. Please make sure the server is running (npm start)');
-            }
+            const testResponse = await fetch('/test');  // Remove hardcoded localhost:8080
+            const testData = await testResponse.json();
+            console.log('Server test response:', testData);
+        } catch (error) {
+            console.error('Server connection test failed:', error);
+            throw new Error('Could not connect to server. Please make sure the server is running');
+        }
 
-            // If server test passed, proceed with the email check
-            const response = await fetch(`http://localhost:8080/api/check-email?email=${encodeURIComponent(email)}`);
-            const data = await response.json();
+        // If server test passed, proceed with the email check
+        const response = await fetch(`/api/check-email?email=${encodeURIComponent(email)}`);  // Remove hardcoded localhost:8080
+        // ...existing code...
+        const data = await response.json();
             console.log('Server response:', JSON.stringify(data, null, 2));
             
             if (!response.ok) {
