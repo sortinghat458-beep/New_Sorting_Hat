@@ -15,8 +15,8 @@
         <h1>Accio My House!</h1>
             <form id="emailForm">
                 <div class="input-group">
-                    <label for="emailInput"><strong></strong>Summon your Owl Post address</strong> <span style="font-weight: normal;">(Corporate Email)</span></label>
-                    <input type="email" id="emailInput" required placeholder="Enter your email:">
+                    <label for="emailInput"><strong>Summon your Owl Post address</strong> <span style="font-weight: normal;">(Use your registered email)</span></label>
+                    <input type="email" id="emailInput" required placeholder="Enter your registered email address">
                 </div>
                 <img src="./assets/button.png" alt="Reveal My House" id="submitButton" style="cursor: pointer; display: block; margin: 0 auto;">
             </form>
@@ -80,11 +80,14 @@
 
         // If server test passed, proceed with the email check
         const response = await fetch(`/api/check-email?email=${encodeURIComponent(email)}`);  // Remove hardcoded localhost:8080
-        // ...existing code...
         const data = await response.json();
             console.log('Server response:', JSON.stringify(data, null, 2));
             
             if (!response.ok) {
+                // Handle specific case when email is not found in Larkbase
+                if (response.status === 404) {
+                    throw new Error('Email not found');
+                }
                 throw new Error(data.error || 'Failed to check email');
             }
             

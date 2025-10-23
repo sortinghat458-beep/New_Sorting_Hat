@@ -67,13 +67,16 @@ app.get('/api/check-email', async (req, res) => {
         // Build the URL with proper parameters for records
         const baseUrl = `https://open.larksuite.com/open-apis/bitable/v1/apps/${config.appToken}/tables/${config.tableId}/records`;
         
-        // Get all records for this email and include Date Created field
+        // Get all records that contain the trimmed email (to handle spaces and variations)
+        const trimmedEmail = email.trim();
+        const filter = `CurrentValue.[Email].contains("${trimmedEmail}")`;
+        
         const params = new URLSearchParams({
-            filter: `CurrentValue.[Email]="${email}"`,
+            filter: filter,
             field_names: JSON.stringify(["Email", "Result", "Date Created"])
         });
         
-        console.log('Making request to Larkbase with params:', params.toString());
+        console.log('Making request to Larkbase with filter:', filter);
         
         const response = await fetch(
             `${baseUrl}?${params}`,
@@ -98,7 +101,7 @@ app.get('/api/check-email', async (req, res) => {
         }
 
         if (!data.data || !data.data.items || data.data.items.length === 0) {
-            return res.status(404).json({ error: 'Email not found in our records' });
+            return res.status(404).json({ error: 'Email not found' });
         }
 
         // Get all records and sort them by Date Created
